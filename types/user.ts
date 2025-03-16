@@ -49,3 +49,14 @@ export interface Purchase {
   quantity: number;
   user_id: number;
 };
+
+export interface Service {
+  id: string;
+  icon: React.ReactNode;
+  name: string;
+  description: string;
+}
+
+export interface ServicesProps {
+  services: Service[];
+}
