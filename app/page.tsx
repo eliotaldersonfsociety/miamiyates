@@ -7,7 +7,7 @@ import Hero from "@/app/hero/page"; // Importa el Hero desde la carpeta correcta
 import { Star, MapPin, Users } from "lucide-react";
 import YachtSearchForm from "@/app/citas/page"; // Importa el YachtSearchForm desde la carpeta correcta
 import Footer from "@/app/footer/page"; // Importa el Footer desde la carpeta correcta
-import Services from "@/app/service/page"; // Importa el Services desde la carpeta correcta
+import Services from "@/components/service/page";
 import Contact from "@/app/contact/page"; // Importa el Contact desde la carpeta correcta
 
 const products: Product[] = [
