@@ -1,13 +1,4 @@
-interface Service {
-  id: string;
-  icon: React.ReactNode;
-  name: string;
-  description: string;
-}
-
-interface ServicesProps {
-  services: Service[];
-}
+import { Service, ServicesProps } from '@/types/user';
 
 export default function Services({ services }: ServicesProps) {
     return (
