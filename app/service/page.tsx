@@ -1,7 +1,12 @@
-import React from 'react';
-import { Service, ServicesProps } from '@/types/user';
+import { Service } from '@/types/user';
 
-const Services: React.FC<ServicesProps> = ({ services }) => {
+const services: Service[] = [
+  { id: "1", icon: <SomeIcon />, name: "Luxury Catering", description: "Enjoy gourmet meals on board." },
+  { id: "2", icon: <AnotherIcon />, name: "Professional Crew", description: "Experienced crew for your journey." },
+  { id: "3", icon: <ThirdIcon />, name: "Water Sports", description: "Jetskis, snorkeling, and more." },
+];
+
+export default function ServicesPage() {
   return (
     <section id="services" className="py-16">
       <div className="container">
@@ -25,6 +30,4 @@ const Services: React.FC<ServicesProps> = ({ services }) => {
       </div>
     </section>
   );
-};
-
-export default Services;
+}
