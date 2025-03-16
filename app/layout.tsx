@@ -7,8 +7,8 @@ import { Toaster } from "react-hot-toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Your E-commerce Store",
-  description: "Shop the latest products with our easy-to-use platform",
+  title: "Miami Yates",
+  description: "Sail around Miami today!",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
