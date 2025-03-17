@@ -68,20 +68,23 @@ export function Header({ clearCart, addToCart }: HeaderProps) {
     loadCart();
   }, [cookies.cart, removeCookie]);
 
-  // Verificar autenticación
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch("/api/user", { method: "GET" });
-        setIsLoggedIn(res.ok);
-        console.error("Auth check failed:", res.ok);
-      } catch (error) {
-        console.error("Auth check failed:", error);
+    const checkAuth = () => {
+      // Revisamos si la cookie o token de autenticación existe
+      const token = cookies.user || localStorage.getItem("token");
+
+      if (token) {
+        // Si hay un token, asumimos que el usuario está autenticado
+        setIsLoggedIn(true);
+      } else {
+        // Si no hay token, el usuario no está autenticado
         setIsLoggedIn(false);
       }
     };
+
     checkAuth();
-  }, []);
+  }, [cookies.user]);
+
 
   // Manejar agregar al carrito
   const addToCartHandler = (item: Product) => {
