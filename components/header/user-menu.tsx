@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { LogOut, User, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { LogOut, User, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "react-hot-toast";
-import { Skeleton } from '@/components/ui/skeleton'; // Importamos Skeleton
+import { Skeleton } from "@/components/ui/skeleton"; // Importamos Skeleton
 
 interface UserMenuProps {
   onClose: () => void;
@@ -21,8 +22,8 @@ interface UserData {
 }
 
 export function UserMenu({ onClose }: UserMenuProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,22 +35,43 @@ export function UserMenu({ onClose }: UserMenuProps) {
     fetchUserData();
   }, []);
 
+  const getCookie = (name: string) => {
+    if (typeof document !== "undefined") {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(";").shift();
+    }
+    return null;
+  };
+
   const fetchUserData = async () => {
     setIsFetching(true);
+    
+    // Revisar si el token existe en las cookies
+    const token = getCookie("accessToken");
+    
+    if (!token) {
+      // Si no hay token, no intentamos hacer la solicitud y actualizamos el estado de autenticación
+      console.log("Usuario no autenticado");
+      setIsLoggedIn(false);
+      setIsFetching(false);
+      return;
+    }
+  
     try {
-      const response = await fetch('/api/user', {
-        method: 'GET',
-        credentials: 'include',
+      const response = await fetch("/api/user", {
+        method: "GET",
+        credentials: "include", // Para enviar la cookie si es necesario
       });
-
-      if (!response.ok) throw new Error('No authenticated');
-
+  
+      if (!response.ok) throw new Error("No authenticated");
+  
       const data = await response.json();
       setUserData(data);
       setIsLoggedIn(true);
     } catch (err) {
-      console.error('Failed to fetch user data', err);
-      localStorage.removeItem('token');
+      console.error("Failed to fetch user data", err);
+      setIsLoggedIn(false);  // Asegurarse de que el estado de autenticación se actualice correctamente
     } finally {
       setIsFetching(false);
     }
@@ -61,15 +83,15 @@ export function UserMenu({ onClose }: UserMenuProps) {
     setError(null);
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
         credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error('Login request failed');
+        throw new Error("Login request failed");
       }
 
       toast.success("Inicio de sesión exitoso");
@@ -85,21 +107,20 @@ export function UserMenu({ onClose }: UserMenuProps) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/logout', {
-        method: 'POST',
-        credentials: 'include',
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error('Logout request failed');
+        throw new Error("Logout request failed");
       }
 
-      localStorage.removeItem('token');
       setIsLoggedIn(false);
       setUserData(null);
-      router.push('/');
+      router.push("/");
     } catch (err) {
-      setError('Unable to log out. Please try again.');
+      setError("Unable to log out. Please try again.");
     }
   };
 
@@ -173,9 +194,9 @@ export function UserMenu({ onClose }: UserMenuProps) {
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
-            <Button type="button" variant="outline" className="w-full" onClick={() => console.log('Register clicked')}>
+            <Button type="button" variant="outline" className="w-full" onClick={() => console.log("Register clicked")}>
               Create Account
             </Button>
           </CardFooter>
