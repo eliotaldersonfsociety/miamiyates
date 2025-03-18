@@ -91,7 +91,7 @@ export default function Hero() {
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-8 mt-16">
         <h1 className="text-center">
           <span className="text-md md:text-6xl font-bold block">
-            {displayText}
+            <span translate="no">{displayText}</span>
             <span
               className="border-r-2 border-white ml-1"
               style={{ animation: "blink 1s step-end infinite" }}
@@ -106,7 +106,7 @@ export default function Hero() {
               display: "inline-block",
             }}
           >
-            Luxury
+            <span translate="no">Luxury</span>
           </span>
         </h1>
         <div className="flex flex-col md:flex-row gap-4">
