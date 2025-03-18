@@ -22,7 +22,7 @@ export default function Hero() {
   const [isTyping, setIsTyping] = useState(true)
   const [wordIndex, setWordIndex] = useState(0)
   const [charIndex, setCharIndex] = useState(0)
-  const mountedRef = useRef(true)
+  const mountedRef = useRef(true) // Referencia para verificar si el componente está montado
 
   const fullText = [
     "Celebrate your baby shower", "Celebrate your birthday", "Romantic date", "Business meeting", "Marriage proposal",
@@ -33,48 +33,42 @@ export default function Hero() {
     console.log("Hero montado")
     return () => {
       console.log("Hero desmontado")
-      mountedRef.current = false
+      mountedRef.current = false // Marcar como desmontado
     }
   }, [])
 
   useEffect(() => {
     let timeout: NodeJS.Timeout
 
-    if (wordIndex < fullText.length) {
+    // Solo proceder si el componente sigue montado
+    if (mountedRef.current && wordIndex < fullText.length) {
       if (isTyping) {
         timeout = setTimeout(() => {
-          if (!mountedRef.current) return
-
+          // Escribir la siguiente letra
           setDisplayText((prevText) => prevText + fullText[wordIndex][charIndex])
           setCharIndex((prev) => prev + 1)
-          console.log(`Escribiendo: ${fullText[wordIndex].slice(0, charIndex + 1)}`)
 
           if (charIndex === fullText[wordIndex].length - 1) {
             setIsTyping(false)
           }
-        }, 700)
+        }, 100) // Velocidad de escritura
       } else {
         timeout = setTimeout(() => {
-          if (!mountedRef.current) return
-
-          // Solo borra si hay algo que borrar
+          // Solo borrar si hay algo que borrar
           if (charIndex > 0) {
-            setDisplayText((prevText) => prevText.slice(0, -1))
+            setDisplayText((prevText) => prevText.slice(0, -1)) // Borra la última letra
             setCharIndex((prev) => prev - 1)
-            console.log(`Borrando: ${displayText.slice(0, -1)}`)
-          }
-
-          // Cuando ya se borró el último carácter, reinicia para la siguiente palabra
-          if (charIndex <= 1) {
+          } else {
+            // Cuando ya se ha borrado la palabra, iniciar la siguiente palabra
             setIsTyping(true)
             setWordIndex((prevIndex) => (prevIndex + 1) % fullText.length)
           }
-        }, 50)
+        }, 50) // Velocidad de borrado
       }
     }
 
     return () => clearTimeout(timeout)
-  }, [charIndex, wordIndex, isTyping, displayText, fullText])
+  }, [charIndex, wordIndex, isTyping, fullText])
 
   return (
     <div className="relative w-full h-[400px]">
