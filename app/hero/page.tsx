@@ -1,15 +1,14 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Truck } from "lucide-react"
 import Link from "next/link"
 
 const floatingAnimation = `
   @keyframes floating {
     0% { transform: translate(0, 0px); }
     50% { transform: translate(0, 15px); }
-    100% { transform: translate(0, -0px); }
+    100% { transform: translate(0, 0px); }
   }
 
   @keyframes blink {
@@ -20,46 +19,59 @@ const floatingAnimation = `
 
 export default function Hero() {
   const [displayText, setDisplayText] = useState("")
-  const [isTyping, setIsTyping] = useState(true) // Para controlar si está escribiendo o borrando
+  const [isTyping, setIsTyping] = useState(true)
   const [wordIndex, setWordIndex] = useState(0)
-  const [charIndex, setCharIndex] = useState(0) // Índice de la letra que se está escribiendo o borrando
+  const [charIndex, setCharIndex] = useState(0)
+  const mountedRef = useRef(true)
+
   const fullText = [
     "Celebrate your baby shower", "Celebrate your birthday", "Romantic date", "Business meeting", "Marriage proposal",
     "Graduation party", "Celebrate your wedding", "Let's party", "A day of fishing"
   ]
 
   useEffect(() => {
+    console.log("Hero montado")
+    return () => {
+      console.log("Hero desmontado")
+      mountedRef.current = false
+    }
+  }, [])
+
+  useEffect(() => {
     let timeout: NodeJS.Timeout
 
     if (wordIndex < fullText.length) {
       if (isTyping) {
-        // Escribiendo la palabra
         timeout = setTimeout(() => {
-          setDisplayText((prevText) => prevText + fullText[wordIndex][charIndex]) // Escribe la siguiente letra
-          setCharIndex(charIndex + 1) // Avanza al siguiente carácter
+          // Verificar que el componente sigue montado
+          if (!mountedRef.current) return
+
+          setDisplayText((prevText) => prevText + fullText[wordIndex][charIndex])
+          setCharIndex((prev) => prev + 1)
+          console.log(`Escribiendo: ${fullText[wordIndex].slice(0, charIndex + 1)}`)
 
           if (charIndex === fullText[wordIndex].length - 1) {
-            // Termina de escribir la palabra, cambia a borrado
             setIsTyping(false)
           }
-        }, 700) // Velocidad de escritura (100ms por letra)
+        }, 700)
       } else {
-        // Borrando la palabra
         timeout = setTimeout(() => {
-          setDisplayText((prevText) => prevText.slice(0, -1)) // Borra la última letra
-          setCharIndex(charIndex - 1) // Retrocede el índice de la letra
+          if (!mountedRef.current) return
+
+          setDisplayText((prevText) => prevText.slice(0, -1))
+          setCharIndex((prev) => prev - 1)
+          console.log(`Borrando: ${displayText.slice(0, -1)}`)
 
           if (charIndex === 1) {
-            // Cuando termina de borrar la palabra, pasa a la siguiente palabra
             setIsTyping(true)
-            setWordIndex((prevIndex) => (prevIndex + 1) % fullText.length) // Avanza al siguiente índice de palabra (en bucle)
+            setWordIndex((prevIndex) => (prevIndex + 1) % fullText.length)
           }
-        }, 50) // Velocidad de borrado (50ms por letra)
+        }, 50)
       }
     }
 
-    return () => clearTimeout(timeout) // Limpiar el timeout cuando se desmonte el componente o cambie el estado
-  }, [charIndex, wordIndex, isTyping])
+    return () => clearTimeout(timeout)
+  }, [charIndex, wordIndex, isTyping, displayText, fullText])
 
   return (
     <div className="relative w-full h-[400px]">
@@ -71,15 +83,16 @@ export default function Hero() {
         className="object-cover"
         priority
       />
-      {/* Dark overlay with fade effect */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/50 to-gray-200" />
 
-      {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-8 mt-16">
         <h1 className="text-center">
           <span className="text-md md:text-6xl font-bold block">
             {displayText}
-            <span className="border-r-2 border-white ml-1" style={{ animation: "blink 1s step-end infinite" }}>
+            <span
+              className="border-r-2 border-white ml-1"
+              style={{ animation: "blink 1s step-end infinite" }}
+            >
               &nbsp;
             </span>
           </span>
