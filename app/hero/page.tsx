@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import Image from "next/image"
-import Link from "next/link"
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const floatingAnimation = `
   @keyframes floating {
@@ -15,60 +15,66 @@ const floatingAnimation = `
     from, to { border-color: transparent; }
     50% { border-color: #fff; }
   }
-`
+`;
 
 export default function Hero() {
-  const [displayText, setDisplayText] = useState("")
-  const [isTyping, setIsTyping] = useState(true)
-  const [wordIndex, setWordIndex] = useState(0)
-  const [charIndex, setCharIndex] = useState(0)
-  const mountedRef = useRef(true) // Referencia para verificar si el componente está montado
+  const [displayText, setDisplayText] = useState("");
+  const [isTyping, setIsTyping] = useState(true);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const mountedRef = useRef(true);
 
   const fullText = [
     "Celebrate your baby shower", "Celebrate your birthday", "Romantic date", "Business meeting", "Marriage proposal",
     "Graduation party", "Celebrate your wedding", "Let's party", "A day of fishing"
-  ]
+  ];
 
   useEffect(() => {
-    console.log("Hero montado")
+    console.log("Hero mounted");
     return () => {
-      console.log("Hero desmontado")
-      mountedRef.current = false // Marcar como desmontado
-    }
-  }, [])
+      console.log("Hero unmounted");
+      mountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout
+    let timeout: NodeJS.Timeout;
 
-    // Solo proceder si el componente sigue montado
-    if (mountedRef.current && wordIndex < fullText.length) {
+    if (wordIndex < fullText.length) {
       if (isTyping) {
         timeout = setTimeout(() => {
-          // Escribir la siguiente letra
-          setDisplayText((prevText) => prevText + fullText[wordIndex][charIndex])
-          setCharIndex((prev) => prev + 1)
+          if (!mountedRef.current) return;
+
+          setDisplayText((prevText) => prevText + fullText[wordIndex][charIndex]);
+          setCharIndex((prev) => prev + 1);
+          console.log(`Typing: ${fullText[wordIndex].slice(0, charIndex + 1)}`);
 
           if (charIndex === fullText[wordIndex].length - 1) {
-            setIsTyping(false)
+            setIsTyping(false);
           }
-        }, 100) // Velocidad de escritura
+        }, 700);
       } else {
         timeout = setTimeout(() => {
-          // Solo borrar si hay algo que borrar
+          if (!mountedRef.current) return;
+
+          // Only delete if there is something to delete
           if (charIndex > 0) {
-            setDisplayText((prevText) => prevText.slice(0, -1)) // Borra la última letra
-            setCharIndex((prev) => prev - 1)
-          } else {
-            // Cuando ya se ha borrado la palabra, iniciar la siguiente palabra
-            setIsTyping(true)
-            setWordIndex((prevIndex) => (prevIndex + 1) % fullText.length)
+            setDisplayText((prevText) => prevText.slice(0, -1));
+            setCharIndex((prev) => prev - 1);
+            console.log(`Deleting: ${displayText.slice(0, -1)}`);
           }
-        }, 50) // Velocidad de borrado
+
+          // When the last character is deleted, start typing the next word
+          if (charIndex <= 1) {
+            setIsTyping(true);
+            setWordIndex((prevIndex) => (prevIndex + 1) % fullText.length);
+          }
+        }, 50);
       }
     }
 
-    return () => clearTimeout(timeout)
-  }, [charIndex, wordIndex, isTyping, fullText])
+    return () => clearTimeout(timeout);
+  }, [charIndex, wordIndex, isTyping, displayText, fullText]);
 
   return (
     <div className="relative w-full h-[400px]">
@@ -104,7 +110,7 @@ export default function Hero() {
           </span>
         </h1>
         <div className="flex flex-col md:flex-row gap-4">
-          <Link href="https://w.app/miamiyates">
+          <Link href="https://wa.me/miamiyates">
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold transition-colors">
               Purchase by WhatsApp
             </button>
@@ -112,5 +118,5 @@ export default function Hero() {
         </div>
       </div>
     </div>
-  )
+  );
 }
