@@ -8,7 +8,7 @@ import Hero from "@/app/hero/page";
 import { Star, MapPin, Users } from "lucide-react";
 import YachtSearchForm from "@/app/citas/page";
 import Footer from "@/app/footer/page";
-import Services from "@/components/service/page";
+//import Services from "@/components/service/page";
 import Contact from "@/app/contact/page";
 import ChatWidget from "@/components/chat/page";
 
@@ -116,7 +116,7 @@ export default function Home() {
           ))}
         </div>
       </main>
-      <Services services={servicesData} />
+      
       <ChatWidget />
       <Contact />
       <Footer />
