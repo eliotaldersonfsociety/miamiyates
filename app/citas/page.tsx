@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,8 +8,8 @@ import { Calendar, DollarSign, Search, Users } from "lucide-react";
 
 export default function YachtSearchForm() {
   const [date, setDate] = useState("");
-  const [guests, setGuests] = useState("");
-  const [duration, setDuration] = useState("");
+  const [guests, setGuests] = useState("1-5"); // Default value
+  const [duration, setDuration] = useState("half-day"); // Default value
 
   const handleSearch = () => {
     // Implement search functionality here
@@ -20,7 +21,7 @@ export default function YachtSearchForm() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Date</label>
-            <div>
+          <div>
             <Input
               type="date"
               value={date}
@@ -35,7 +36,7 @@ export default function YachtSearchForm() {
             <SelectTrigger>
               <div className="flex items-center">
                 <Users className="mr-2 h-4 w-4 text-muted-foreground" />
-                <SelectValue placeholder="Number of guests" />
+                <SelectValue>{guests || "Number of guests"}</SelectValue>
               </div>
             </SelectTrigger>
             <SelectContent>
@@ -52,7 +53,7 @@ export default function YachtSearchForm() {
             <SelectTrigger>
               <div className="flex items-center">
                 <DollarSign className="mr-2 h-4 w-4 text-muted-foreground" />
-                <SelectValue placeholder="Rental duration" />
+                <SelectValue>{duration || "Rental duration"}</SelectValue>
               </div>
             </SelectTrigger>
             <SelectContent>
