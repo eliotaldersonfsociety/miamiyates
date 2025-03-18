@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Header } from "@/components/header/page";
 import { Product } from "@/types/user";
-//import Hero from "@/app/hero/page";
+import Hero from "@/app/hero/page";
 import { Star, MapPin, Users } from "lucide-react";
 import YachtSearchForm from "@/app/citas/page";
 import Footer from "@/app/footer/page";
@@ -68,6 +68,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header cart={cart} clearCart={clearCart} addToCart={addToCart} totalPrice={totalPrice} />
+      <Hero />
       <YachtSearchForm />
       <main className="flex-1 container py-8">
         <h1 className="text-3xl font-bold text-center">Our Luxury Fleet</h1>
