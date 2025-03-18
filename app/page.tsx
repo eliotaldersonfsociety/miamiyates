@@ -115,7 +115,6 @@ export default function Home() {
           ))}
         </div>
       </main>
-      <Services services={servicesData} />
       <ChatWidget />
     </div>
   );
