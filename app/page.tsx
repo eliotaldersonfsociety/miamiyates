@@ -6,7 +6,7 @@ import { Header } from "@/components/header/page";
 import { Product } from "@/types/user";
 import Hero from "@/app/hero/page";
 import { Star, MapPin, Users } from "lucide-react";
-//import YachtSearchForm from "@/app/citas/page";
+import YachtSearchForm from "@/app/citas/page";
 import Footer from "@/app/footer/page";
 import Services from "@/components/service/page";
 import Contact from "@/app/contact/page";
@@ -69,7 +69,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Header cart={cart} clearCart={clearCart} addToCart={addToCart} totalPrice={totalPrice} />
       <Hero />
-      
+      <YachtSearchForm />
       <main className="flex-1 container py-8">
         <h1 className="text-3xl font-bold text-center">Our Luxury Fleet</h1>
         <p className="mt-4 text-center">
