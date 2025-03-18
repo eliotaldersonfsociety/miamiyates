@@ -43,7 +43,6 @@ export default function Hero() {
     if (wordIndex < fullText.length) {
       if (isTyping) {
         timeout = setTimeout(() => {
-          // Verificar que el componente sigue montado
           if (!mountedRef.current) return
 
           setDisplayText((prevText) => prevText + fullText[wordIndex][charIndex])
@@ -58,11 +57,15 @@ export default function Hero() {
         timeout = setTimeout(() => {
           if (!mountedRef.current) return
 
-          setDisplayText((prevText) => prevText.slice(0, -1))
-          setCharIndex((prev) => prev - 1)
-          console.log(`Borrando: ${displayText.slice(0, -1)}`)
+          // Solo borra si hay algo que borrar
+          if (charIndex > 0) {
+            setDisplayText((prevText) => prevText.slice(0, -1))
+            setCharIndex((prev) => prev - 1)
+            console.log(`Borrando: ${displayText.slice(0, -1)}`)
+          }
 
-          if (charIndex === 1) {
+          // Cuando ya se borró el último carácter, reinicia para la siguiente palabra
+          if (charIndex <= 1) {
             setIsTyping(true)
             setWordIndex((prevIndex) => (prevIndex + 1) % fullText.length)
           }
