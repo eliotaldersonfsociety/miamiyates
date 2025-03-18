@@ -7,9 +7,9 @@ import { Product } from "@/types/user";
 //import Hero from "@/app/hero/page";
 import { Star, MapPin, Users } from "lucide-react";
 import YachtSearchForm from "@/app/citas/page";
-//import Footer from "@/app/footer/page";
+import Footer from "@/app/footer/page";
 //import Services from "@/components/service/page";
-//import Contact from "@/app/contact/page";
+import Contact from "@/app/contact/page";
 import ChatWidget from "@/components/chat/page";
 
 const products: Product[] = [
@@ -115,6 +115,8 @@ export default function Home() {
           ))}
         </div>
       </main>
+      <Contact />
+      <Footer />
       <ChatWidget />
     </div>
   );
